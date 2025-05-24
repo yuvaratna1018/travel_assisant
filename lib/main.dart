@@ -1,0 +1,1227 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const TravelAssistantApp());
+}
+
+class TravelAssistantApp extends StatelessWidget {
+  const TravelAssistantApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Travel Assistant',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        fontFamily: 'Roboto',
+        primarySwatch: Colors.teal,
+        useMaterial3: true,
+      ),
+      home: const HomePage(),
+    );
+  }
+}
+
+// --- HOME PAGE ---
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.network(
+                'https://cdn-icons-png.flaticon.com/512/201/201623.png',
+                height: 100,
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'Welcome to Travel Assistant',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 30),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LoginScreen(),
+                    ),
+                  );
+                },
+                child: const Text('Start Exploring'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  String _errorMessage = '';
+
+  void _login() {
+    final username = _usernameController.text.trim();
+    final password = _passwordController.text.trim();
+
+    if (username.isNotEmpty && password.isNotEmpty) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const CitiesPage()),
+      );
+    } else {
+      setState(() {
+        _errorMessage = 'Username and password cannot be empty.';
+      });
+    }
+  }
+
+  void _navigateToSignUp() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const SignUpScreen()),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.network(
+              'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748061787/gratis-png-agente-de-viajes-playa-del-carmen-viajes-aereos-iconos-de-computadora-viajes_ho9xfq.png',
+              fit: BoxFit.cover,
+            ),
+          ),
+          Positioned.fill(
+            child: Container(color: Colors.black.withOpacity(0.5)),
+          ),
+          Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      'Travel Assistant',
+                      style: TextStyle(
+                        fontSize: 32,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 32),
+                    TextFormField(
+                      controller: _usernameController,
+                      decoration: const InputDecoration(
+                        labelText: 'Username',
+                        filled: true,
+                        fillColor: Colors.white70,
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: _passwordController,
+                      decoration: const InputDecoration(
+                        labelText: 'Password',
+                        filled: true,
+                        fillColor: Colors.white70,
+                        border: OutlineInputBorder(),
+                      ),
+                      obscureText: true,
+                    ),
+                    if (_errorMessage.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Text(
+                          _errorMessage,
+                          style: const TextStyle(color: Colors.redAccent),
+                        ),
+                      ),
+                    const SizedBox(height: 24),
+                    ElevatedButton(
+                      onPressed: _login,
+                      child: const Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 32.0,
+                          vertical: 12,
+                        ),
+                        child: Text('Login'),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.teal,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: _navigateToSignUp,
+                      child: const Text(
+                        "Don't have an account? Sign Up",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
+
+  @override
+  State<SignUpScreen> createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
+  final _usernameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  String _errorMessage = '';
+
+  void _signUp() {
+    final username = _usernameController.text.trim();
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+
+    if (username.isNotEmpty && email.isNotEmpty && password.isNotEmpty) {
+      Navigator.pop(context);
+    } else {
+      setState(() {
+        _errorMessage = 'All fields are required.';
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Sign Up')),
+      body: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            children: [
+              TextFormField(
+                controller: _usernameController,
+                decoration: const InputDecoration(labelText: 'Username'),
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _emailController,
+                decoration: const InputDecoration(labelText: 'Email'),
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _passwordController,
+                decoration: const InputDecoration(labelText: 'Password'),
+                obscureText: true,
+              ),
+              if (_errorMessage.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Text(
+                    _errorMessage,
+                    style: const TextStyle(color: Colors.redAccent),
+                  ),
+                ),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: _signUp,
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 12),
+                  child: Text('Sign Up'),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// Placeholder for CitiesPage
+
+// --- CITIES PAGE ---
+
+class CitiesPage extends StatelessWidget {
+  const CitiesPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final List<String> cities = [
+      'Delhi',
+      'Mumbai',
+      'Bangalore',
+      'Kolkata',
+      'Chennai',
+      'Jaipur',
+      'Hyderabad',
+    ];
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('Select a City')),
+      drawer: const AppDrawer(), // Add drawer to CitiesPage
+      body: ListView.builder(
+        itemCount: cities.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text(cities[index]),
+            trailing: const Icon(Icons.arrow_forward_ios),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CityDetailsPage(city: cities[index]),
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+}
+
+class AppDrawer extends StatelessWidget {
+  const AppDrawer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          const UserAccountsDrawerHeader(
+            accountName: Text("John Doe"),
+            accountEmail: Text("john.doe@example.com"),
+            currentAccountPicture: CircleAvatar(
+              backgroundImage: NetworkImage(
+                "https://www.woolha.com/media/2020/03/flutter-circleavatar-minradius-maxradius.jpg",
+              ),
+            ),
+            decoration: BoxDecoration(color: Colors.teal),
+          ),
+          ListTile(
+            leading: const Icon(Icons.person),
+            title: const Text("Profile"),
+            onTap: () {
+              Navigator.pop(context);
+              // Add profile navigation logic here
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.language),
+            title: const Text("Languages"),
+            onTap: () {
+              Navigator.pop(context);
+              // Add language settings logic here
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.feedback),
+            title: const Text("Help & Feedback"),
+            onTap: () {
+              Navigator.pop(context);
+              // Add feedback page navigation here
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.settings),
+            title: const Text("Settings"),
+            onTap: () {
+              Navigator.pop(context);
+              // Add settings navigation logic here
+            },
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.logout),
+            title: const Text("Logout"),
+            onTap: () {
+              Navigator.pop(context);
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text("Confirm Logout"),
+                  content: const Text("Are you sure you want to logout?"),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text("Cancel"),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          '/login',
+                          (route) => false,
+                        );
+                      },
+                      child: const Text("Logout"),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// --- CITY DETAILS PAGE ---
+class CityDetailsPage extends StatelessWidget {
+  final String city;
+  const CityDetailsPage({super.key, required this.city});
+
+  @override
+  Widget build(BuildContext context) {
+    final cityInfo = _cityInfo[city]!;
+
+    return Scaffold(
+      appBar: AppBar(title: Text(city)),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // City Main Image
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.network(
+                cityInfo['image']!,
+                height: 200,
+                width: double.infinity,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) =>
+                    const Text("Image not available"),
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            InfoTile(label: 'Description', value: cityInfo['description']!),
+            InfoTile(label: 'Best Time to Visit', value: cityInfo['bestTime']!),
+
+            SectionTitle(title: 'Places to Visit'),
+            ImageList(
+              items: cityInfo['placesToVisit'] as List<Map<String, String>>,
+            ),
+
+            SectionTitle(title: 'Famous Food'),
+            ImageList(
+              items: cityInfo['famousFood'] as List<Map<String, String>>,
+            ),
+
+            SectionTitle(title: 'Shopping Markets'),
+            ImageList(
+              items: cityInfo['shoppingMarkets'] as List<Map<String, String>>,
+            ),
+
+            SectionTitle(title: 'Nearby Places'),
+            ImageList(
+              items: cityInfo['nearbyPlaces'] as List<Map<String, String>>,
+            ),
+
+            SectionTitle(title: 'restaurants'),
+            ImageList(
+              items: cityInfo['restaurants'] as List<Map<String, String>>,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class InfoTile extends StatelessWidget {
+  final String label;
+  final String value;
+
+  const InfoTile({super.key, required this.label, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.teal,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(value, style: const TextStyle(fontSize: 16)),
+        ],
+      ),
+    );
+  }
+}
+
+class SectionTitle extends StatelessWidget {
+  final String title;
+  const SectionTitle({super.key, required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 16, bottom: 8),
+      child: Text(
+        title,
+        style: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: Colors.teal,
+        ),
+      ),
+    );
+  }
+}
+
+class ImageList extends StatelessWidget {
+  final List<Map<String, String>> items;
+
+  const ImageList({super.key, required this.items});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 140,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: items.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 12),
+        itemBuilder: (context, index) {
+          final item = items[index];
+          return Column(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.network(
+                  item['image']!,
+                  width: 120,
+                  height: 90,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => const Icon(
+                    Icons.broken_image,
+                    size: 60,
+                    color: Colors.grey,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 6),
+              SizedBox(
+                width: 120,
+                child: Text(
+                  item['name']!,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 14),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+// --- CITY DATA ---
+
+final Map<String, Map<String, dynamic>> _cityInfo = {
+  'Delhi': {
+    'description': 'Capital of India with rich history and monuments.',
+    'bestTime': 'October to March',
+    'image':
+        'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748013013/images_mkd9zb.jpg',
+    'placesToVisit': [
+      {
+        'name': 'Red Fort',
+        'image':
+            'https://res.cloudinary.com/drqh498oo/image/upload/v1748013139/Red-Fort-Old-Delhi-India_tvi3v4.jpg',
+      },
+      {
+        'name': 'India Gate',
+        'image':
+            'https://res.cloudinary.com/drqh498oo/image/upload/v1748013401/indiagate-16430470933x2_avu3oe.jpg',
+      },
+      {
+        'name': 'Qutub Minar',
+        'image':
+            'https://res.cloudinary.com/drqh498oo/image/upload/v1748013567/5d494d3ab6ac479b630cbfa74f3882ab_szdlqi.jpg',
+      },
+      {
+        'name': 'Lotus Temple',
+        'image':
+            'https://res.cloudinary.com/drqh498oo/image/upload/v1748014129/engineering-marvel-at_q1ooy8.jpg',
+      },
+    ],
+    'famousFood': [
+      {
+        'name': 'Chole Bhature',
+        'image':
+            'https://res.cloudinary.com/drqh498oo/image/upload/v1748014373/Chole-bhature-1_ff6bgx.jpg',
+      },
+      {
+        'name': 'Paratha',
+        'image':
+            'https://res.cloudinary.com/drqh498oo/image/upload/v1748014585/477486f48831cbea4c5298347513e033_apdfjo.jpg',
+      },
+      {
+        'name': 'Butter Chicken',
+        'image':
+            'https://res.cloudinary.com/drqh498oo/image/upload/v1748014703/Untitled-design-15_sofpcx.png',
+      },
+    ],
+    'shoppingMarkets': [
+      {
+        'name': 'Sarojini Nagar',
+        'image':
+            'https://res.cloudinary.com/drqh498oo/image/upload/v1748014844/Sarojini-market-lanes_szntdx.webp',
+      },
+      {
+        'name': 'Chandni Chowk',
+        'image':
+            'https://res.cloudinary.com/drqh498oo/image/upload/v1748014949/Chandni-Chowk-Shopping-In-Delhi_600_kw3fvt.jpg',
+      },
+      {
+        'name': 'Lajpat Nagar',
+        'image':
+            'https://res.cloudinary.com/drqh498oo/image/upload/v1748015049/Lajpat-Nagar-Market_s2vgna.jpg',
+      },
+    ],
+    'nearbyPlaces': [
+      {
+        'name': 'Agra',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748018166/download_18_nzlxif.jpg',
+      },
+      {
+        'name': 'Mathura',
+        'image':
+            'https://res.cloudinary.com/drqh498oo/image/upload/v1748015218/mathura-shiv-shankar-tirth-yatra_bplszw.png',
+      },
+    ],
+    'restaurants': [
+      {
+        'name': 'Karim’s',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748014949/images_d8ojlu.jpg',
+        'costForTwo': '₹800',
+        'bookingUrl': 'https://www.karimsdelhi.com/',
+      },
+      {
+        'name': 'Indian Accent',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748014957/download_mn16p2.jpg',
+        'costForTwo': '₹4000',
+        'bookingUrl': 'https://indianaccent.com/newdelhi/',
+      },
+      {
+        'name': 'Saravana Bhavan',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748014964/download_3_kok5uo.jpg',
+        'costForTwo': '₹600',
+        'bookingUrl': 'https://www.saravanabhavan.com/',
+      },
+    ],
+  },
+  'Mumbai': {
+    'description':
+        'The city that never sleeps. Known for Bollywood and beaches.',
+    'bestTime': 'November to February',
+    'image':
+        'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748013443/download_skmb1b.jpg',
+    'placesToVisit': [
+      {
+        'name': 'Gateway of India',
+        'image':
+            'https://res.cloudinary.com/dnbf2yg6g/image/upload/v1748017365/download_1_vvuwrz.jpg',
+      },
+      {
+        'name': 'Marine Drive',
+        'image':
+            'https://res.cloudinary.com/dnbf2yg6g/image/upload/v1748017504/download_2_egfoyi.jpg',
+      },
+      {
+        'name': 'Juhu Beach',
+        'image':
+            'https://res.cloudinary.com/dnbf2yg6g/image/upload/v1748017638/download_3_t1bapd.jpg',
+      },
+    ],
+    'famousFood': [
+      {
+        'name': 'Vada Pav',
+        'image':
+            'https://res.cloudinary.com/dnbf2yg6g/image/upload/v1748017748/download_4_jpkyuy.jpg',
+      },
+      {
+        'name': 'Pav Bhaji',
+        'image':
+            'https://res.cloudinary.com/dnbf2yg6g/image/upload/v1748017788/download_5_a1wiaw.jpg',
+      },
+      {
+        'name': 'Bhel Puri',
+        'image':
+            'https://res.cloudinary.com/dnbf2yg6g/image/upload/v1748017883/images_4_fko0aw.jpg',
+      },
+    ],
+    'shoppingMarkets': [
+      {
+        'name': 'Colaba Causeway',
+        'image':
+            'https://res.cloudinary.com/dnbf2yg6g/image/upload/v1748018002/download_6_or2ax5.jpg',
+      },
+      {
+        'name': 'Linking Road',
+        'image':
+            'https://res.cloudinary.com/dnbf2yg6g/image/upload/v1748018110/images_5_a5fs71.jpg',
+      },
+      {
+        'name': 'Fashion Street',
+        'image':
+            'https://res.cloudinary.com/dnbf2yg6g/image/upload/v1748018187/download_7_ayyjzv.jpg',
+      },
+    ],
+    'nearbyPlaces': [
+      {
+        'name': 'Lonavala',
+        'image':
+            'https://res.cloudinary.com/dnbf2yg6g/image/upload/v1748018296/download_9_oildnj.jpg',
+      },
+      {
+        'name': 'Alibaug',
+        'image':
+            'https://res.cloudinary.com/dnbf2yg6g/image/upload/v1748018396/download_10_drskzg.jpg',
+      },
+    ],
+    'restaurants': [
+      {
+        'name': 'Trishna',
+        'image':
+            'https://res.cloudinary.com/dnbf2yg6g/image/upload/v1748018500/download_11_juiu5m.jpg',
+        'costForTwo': '₹2500',
+        'bookingUrl': 'https://www.zomato.com/mumbai/trishna-fort',
+      },
+      {
+        'name': 'Leopold Cafe',
+        'image':
+            'https://res.cloudinary.com/dnbf2yg6g/image/upload/v1748018585/download_12_rl1mgg.jpg',
+        'costForTwo': '₹1500',
+        'bookingUrl': 'https://www.zomato.com/mumbai/leopold-cafe-colaba',
+      },
+      {
+        'name': 'The Table',
+        'image':
+            'https://res.cloudinary.com/dnbf2yg6g/image/upload/v1748018684/images_6_cge3f6.jpg',
+        'costForTwo': '₹3000',
+        'bookingUrl': 'https://www.thetable.in/',
+      },
+    ],
+  },
+  'Bangalore': {
+    'description': 'Tech capital of India with pleasant weather.',
+    'bestTime': 'October to February',
+    'image':
+        'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748013775/download_2_yctpvs.jpg',
+    'placesToVisit': [
+      {
+        'name': 'Lal Bagh',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748016236/download_4_newj3u.jpg',
+      },
+      {
+        'name': 'Bangalore Palace',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748016243/download_5_dqn5ba.jpg',
+      },
+      {
+        'name': 'Cubbon Park',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748016425/download_7_jctvlt.jpg',
+      },
+    ],
+    'famousFood': [
+      {
+        'name': 'Masala Dosa',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748016425/download_7_jctvlt.jpg',
+      },
+      {
+        'name': 'Idli',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748016649/download_8_rm4lse.jpg',
+      },
+      {
+        'name': 'Vada',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748016657/download_9_xrennp.jpg',
+      },
+    ],
+    'shoppingMarkets': [
+      {
+        'name': 'Commercial Street',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748016670/download_10_edw9kx.jpg',
+      },
+      {
+        'name': 'Brigade Road',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748016682/download_11_cvvuze.jpg',
+      },
+      {
+        'name': 'MG Road',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748016690/download_12_yigb1d.jpg',
+      },
+    ],
+    'nearbyPlaces': [
+      {
+        'name': 'Mysore',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748016690/download_12_yigb1d.jpg',
+      },
+      {
+        'name': 'Nandi Hills',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748016706/download_14_exvyw4.jpg',
+      },
+    ],
+    'restaurants': [
+      {
+        'name': 'MTR 1924',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748017048/download_15_tsrzer.jpg',
+        'costForTwo': '₹800',
+        'bookingUrl': 'https://www.mavallirecipes.com/',
+      },
+      {
+        'name': 'Toit',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748017054/download_16_dgcxqa.jpg',
+        'costForTwo': '₹2000',
+        'bookingUrl': 'https://www.toit.in/',
+      },
+      {
+        'name': 'The Only Place',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748017062/download_17_cq2ar8.jpg',
+        'costForTwo': '₹1800',
+        'bookingUrl':
+            'https://www.zomato.com/bangalore/the-only-place-ashok-nagar',
+      },
+    ],
+  },
+  'Kolkata': {
+    'description': 'City of joy with colonial architecture and culture.',
+    'bestTime': 'October to February',
+    'image':
+        'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748013753/download_1_ghquh5.jpg',
+    'placesToVisit': [
+      {
+        'name': 'Victoria Memorial',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748018380/download_kxho5a.jpg',
+      },
+      {
+        'name': 'Howrah Bridge',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748018389/download_1_eipasu.jpg',
+      },
+      {
+        'name': 'Dakshineswar Kali Temple',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748018395/download_2_rfjqv3.jpg',
+      },
+    ],
+    'famousFood': [
+      {
+        'name': 'Rosogolla',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748019163/download_xcixaw.jpg',
+      },
+      {
+        'name': 'Kathi Roll',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748019171/download_1_uygch2.jpg',
+      },
+      {
+        'name': 'Mishti Doi',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748019177/images_z61mk4.jpg',
+      },
+    ],
+    'shoppingMarkets': [
+      {
+        'name': 'New Market',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748019188/download_2_osdwxg.jpg',
+      },
+      {
+        'name': 'Gariahat Market',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748019195/download_3_ivktyn.jpg',
+      },
+      {
+        'name': 'South City Mall',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748019204/download_4_fgy6r2.jpg',
+      },
+    ],
+    'nearbyPlaces': [
+      {
+        'name': 'Sundarbans',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748019212/download_5_jtuyx2.jpg',
+      },
+      {
+        'name': 'Digha',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748019221/download_6_ybu3lr.jpg',
+      },
+    ],
+    'restaurants': [
+      {
+        'name': 'Peter Cat',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748019230/download_7_nma4ai.jpg',
+        'costForTwo': '₹1200',
+        'bookingUrl':
+            'https://www.zomato.com/kolkata/peter-cat-park-street-area',
+      },
+      {
+        'name': '6 Ballygunge Place',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748019238/download_8_wxbrem.jpg',
+        'costForTwo': '₹1500',
+        'bookingUrl': 'https://www.6ballygungeplace.in/',
+      },
+      {
+        'name': 'Oh! Calcutta',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748019246/download_9_lkvpvx.jpg',
+        'costForTwo': '₹1800',
+        'bookingUrl': 'https://www.speciality.co.in/ohcalcutta/',
+      },
+    ],
+  },
+  'Chennai': {
+    'description':
+        'Cultural capital of South India, known for temples and beaches.',
+    'bestTime': 'November to February',
+    'image':
+        'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748008989/download_3_aibk3l.jpg',
+    'placesToVisit': [
+      {
+        'name': 'Marina Beach',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748057492/images_izxyv9.jpg',
+      },
+      {
+        'name': 'Kapaleeshwarar Temple',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748057501/download_s4vrqi.jpg',
+      },
+      {
+        'name': 'Fort St. George',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748057519/download_1_jqfgzv.jpg',
+      },
+    ],
+    'famousFood': [
+      {
+        'name': 'Idli',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748016649/download_8_rm4lse.jpg',
+      },
+      {
+        'name': 'Dosa',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748057526/download_2_wjwqsd.jpg',
+      },
+      {
+        'name': 'Filter Coffee',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748057532/download_3_lrm51a.jpg',
+      },
+    ],
+    'shoppingMarkets': [
+      {
+        'name': 'T Nagar',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748057539/download_4_oyfgh0.jpg',
+      },
+      {
+        'name': 'Pondy Bazaar',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748057545/download_5_r80k6h.jpg',
+      },
+      {
+        'name': 'Express Avenue Mall',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748057550/download_6_uogxin.jpg',
+      },
+    ],
+    'nearbyPlaces': [
+      {
+        'name': 'Mahabalipuram',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748058245/download_8_setpiw.jpg',
+      },
+      {
+        'name': 'Pondicherry',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748058245/download_8_setpiw.jpg',
+      },
+    ],
+    'restaurants': [
+      {
+        'name': 'Murugan Idli Shop',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748058254/images_1_zlusk0.jpg',
+        'costForTwo': '₹500',
+        'bookingUrl':
+            'https://www.zomato.com/chennai/murugan-idli-shop-triplicane',
+      },
+      {
+        'name': 'Southern Spice',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748058274/download_9_yhsvhe.jpg',
+        'costForTwo': '₹3500',
+        'bookingUrl':
+            'https://www.tajhotels.com/en-in/taj/taj-coromandel-chennai/restaurants/southern-spice/',
+      },
+      {
+        'name': 'Annalakshmi',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748058282/download_10_r9df1v.jpg',
+        'costForTwo': '₹1200',
+        'bookingUrl': 'https://www.annalakshmi.com/',
+      },
+    ],
+  },
+  'Jaipur': {
+    'description': 'The Pink City famous for forts and rich heritage.',
+    'bestTime': 'October to March',
+    'image':
+        'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748013524/images_2_eis559.jpg',
+    'placesToVisit': [
+      {
+        'name': 'Hawa Mahal',
+        'image':
+            'https://res.cloudinary.com/de3bpmsab/image/upload/v1748065348/download_h2ecur.jpg',
+      },
+      {
+        'name': 'Amber Fort',
+        'image':
+            'https://res.cloudinary.com/de3bpmsab/image/upload/v1748065356/download_1_nimopc.jpg',
+      },
+      {
+        'name': 'City Palace',
+        'image':
+            'https://res.cloudinary.com/de3bpmsab/image/upload/v1748065367/download_2_i9jyw9.jpg',
+      },
+    ],
+    'famousFood': [
+      {
+        'name': 'Dal Baati Churma',
+        'image':
+            'https://res.cloudinary.com/de3bpmsab/image/upload/v1748065376/download_3_ng8oik.jpg',
+      },
+      {
+        'name': 'Ghevar',
+        'image':
+            'https://res.cloudinary.com/de3bpmsab/image/upload/v1748065388/download_4_atdsbl.jpg',
+      },
+      {
+        'name': 'Laal Maas',
+        'image':
+            'https://res.cloudinary.com/de3bpmsab/image/upload/v1748065396/download_5_r0g57g.jpg',
+      },
+    ],
+    'shoppingMarkets': [
+      {
+        'name': 'Johari Bazaar',
+        'image':
+            'https://res.cloudinary.com/de3bpmsab/image/upload/v1748065406/download_6_wmobm7.jpg',
+      },
+      {
+        'name': 'Bapu Bazaar',
+        'image':
+            'https://res.cloudinary.com/de3bpmsab/image/upload/v1748065413/download_7_p9kb01.jpg',
+      },
+      {
+        'name': 'Tripolia Bazaar',
+        'image':
+            'https://res.cloudinary.com/de3bpmsab/image/upload/v1748065422/download_8_slyc6a.jpg',
+      },
+    ],
+    'nearbyPlaces': [
+      {
+        'name': 'Ajmer',
+        'image':
+            'https://res.cloudinary.com/de3bpmsab/image/upload/v1748065430/download_9_ywq2gb.jpg',
+      },
+      {
+        'name': 'Pushkar',
+        'image':
+            'https://res.cloudinary.com/de3bpmsab/image/upload/v1748065438/download_10_fj8yby.jpg',
+      },
+    ],
+    'restaurants': [
+      {
+        'name': 'Chokhi Dhani',
+        'image':
+            'https://res.cloudinary.com/de3bpmsab/image/upload/v1748065449/download_11_z2wqt1.jpg',
+        'costForTwo': '₹2000',
+        'bookingUrl': 'https://www.chokhidhani.com/',
+      },
+      {
+        'name': 'laxmi misthan bhandar',
+        'image':
+            'https://res.cloudinary.com/de3bpmsab/image/upload/v1748065457/download_12_cjwrwq.jpg',
+        'costForTwo': '₹1000',
+        'bookingUrl': 'https://www.lmbjaipur.com/',
+      },
+      {
+        'name': '1135 AD',
+        'image':
+            'https://res.cloudinary.com/de3bpmsab/image/upload/v1748065465/download_13_b9gzps.jpg',
+        'costForTwo': '₹3000',
+        'bookingUrl': 'https://www.zomato.com/jaipur/1135-ad-amber',
+      },
+    ],
+  },
+
+  'Hyderabad': {
+    'description': 'City of Pearls, famous for biryani and heritage.',
+    'bestTime': 'October to February',
+    'image':
+        'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748013329/images_1_gnxy6u.jpg',
+    'placesToVisit': [
+      {
+        'name': 'Charminar',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748059705/download_htbcs5.jpg',
+      },
+      {
+        'name': 'Golconda Fort',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748060036/download_1_ayrhwl.jpg',
+      },
+      {
+        'name': 'Hussain Sagar Lake',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748060050/download_2_c7iftl.jpg',
+      },
+    ],
+    'famousFood': [
+      {
+        'name': 'Hyderabadi Biryani',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748059990/download_3_ijapkg.jpg',
+      },
+      {
+        'name': 'Mirchi Ka Salan',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748060058/download_4_jh6y8s.jpg',
+      },
+      {
+        'name': 'Double Ka Meetha',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748060068/images_gaihgc.jpg',
+      },
+    ],
+    'shoppingMarkets': [
+      {
+        'name': 'Laad Bazaar',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748060083/download_5_wfptk2.jpg',
+      },
+      {
+        'name': 'Charminar Market',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748060095/download_6_z5swnh.jpg',
+      },
+      {
+        'name': 'Hitech City Mall',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748060105/download_7_ygkff3.jpg',
+      },
+    ],
+    'nearbyPlaces': [
+      {
+        'name': 'Ramoji Film City',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748060114/download_8_yvcvtr.jpg',
+      },
+      {
+        'name': 'Nagarjuna Sagar',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748060122/download_9_phqgjd.jpg',
+      },
+    ],
+    'restaurants': [
+      {
+        'name': 'Paradise Biryani',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748060129/download_10_korptb.jpg',
+        'cost': '₹800 for two',
+        'bookingLink':
+            'https://www.zomato.com/hyderabad/paradise-restaurant-charminar',
+      },
+      {
+        'name': 'Bawarchi',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748060136/download_11_v3kzzl.jpg',
+        'cost': '₹700 for two',
+        'bookingLink':
+            'https://www.zomato.com/hyderabad/bawarchi-restaurant-rtc-cross-road',
+      },
+      {
+        'name': 'Shah Ghouse',
+        'image':
+            'https://res.cloudinary.com/dhqsyp1l4/image/upload/v1748060144/download_12_gqzzac.jpg',
+        'cost': '₹600 for two',
+        'bookingLink': 'https://www.zomato.com/hyderabad/shah-ghouse-hyderguda',
+      },
+    ],
+  },
+};
